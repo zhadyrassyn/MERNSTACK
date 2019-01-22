@@ -42,18 +42,18 @@ var kitty = new Cat({
 //
 
 //Удалить ЭЛЕМЕНТ ПО ID
-// Cat.findByIdAndDelete('5c15118de5359014d371f1b8').then((deletedCat) => {
-//   console.log('Из базы удалилась кошка ', deletedCat);
-// }).catch((e) => {
-//   console.log('Ошибка ', e);
-// });
+Cat.findByIdAndDelete('5c15118de5359014d371f1b8').then((deletedCat) => {
+  console.log('Из базы удалилась кошка ', deletedCat);
+}).catch((e) => {
+  console.log('Ошибка ', e);
+});
 
 // Обновление Элемента
-// Cat.findByIdAndUpdate('5c15118de5359014d371f1b8', {$set: {
-//   name: 'NewName',
-// }}, {new: true})
-//   .then(function(updatedCat) {
-//     console.log('updatedCat', updatedCat);
-//   }).catch(function(error) {
-//     console.log(error);
-//   });
+Cat.findByIdAndUpdate('5c15118de5359014d371f1b8', {$set: {
+  name: 'NewName',
+}}, {new: true})
+  .then(function(updatedCat) {
+    console.log('updatedCat', updatedCat);
+  }).catch(function(error) {
+    console.log(error);
+  });
