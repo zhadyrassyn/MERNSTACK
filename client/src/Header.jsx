@@ -1,9 +1,18 @@
 import React from 'react';
 
+const links = [
+  'Home',
+  'Login',
+  'Logout',
+];
+
 class Header extends React.Component {
 
+  handleClick(linkName) {
+    this.props.handleReport(linkName);
+  }
+
   render() {
-    console.log(this.props);
     const text = this.props.text;
 
     return (
@@ -11,8 +20,7 @@ class Header extends React.Component {
         <p>{text}</p>
         <nav>
           <ul>
-            <li>Home</li>
-            <li>Login</li>
+            {links.map((link) => <li key={link} onClick={this.handleClick.bind(this, link)}>{link}</li>)}
           </ul>
         </nav>
       </header>
