@@ -1,3 +1,5 @@
+
+/* MODAL */
 /* The Modal (background) */
 .mymodal {
   display: block;
@@ -20,7 +22,7 @@
   margin: auto;
   padding: 0;
   border: 1px solid #888;
-  width: 80%;
+  width: 50%;
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
   -webkit-animation-name: animatetop;
   -webkit-animation-duration: 0.4s;
@@ -41,8 +43,6 @@
 
 /* The Close Button */
 .myclose {
-  color: white;
-  float: right;
   font-size: 28px;
   font-weight: bold;
 }
@@ -56,14 +56,17 @@
 
 .mymodal-header {
   padding: 2px 16px;
-  background-color: #5cb85c;
-  color: white;
+  /*background-color: #5cb85c;*/
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .mymodal-body {padding: 2px 16px;}
 
 .mymodal-footer {
   padding: 2px 16px;
-  background-color: #5cb85c;
+  /*background-color: #5cb85c;*/
   color: white;
 }
