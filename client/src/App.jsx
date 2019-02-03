@@ -24,14 +24,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://localhost:3001/api/posts')
-      .then((response) => {
-        this.setState({
-          posts: response.data.posts,
-        });
-      }).catch((error) => {
-        console.log(error);
-    })
+    // axios.get('http://localhost:3001/api/posts')
+    //   .then((response) => {
+    //     this.setState({
+    //       posts: response.data.posts,
+    //     });
+    //   }).catch((error) => {
+    //     console.log(error);
+    // })
   }
 
   showAddPostModalEvent() {
@@ -91,6 +91,14 @@ class App extends React.Component {
       .then((success) => {
         if (success.status === 200) {
           const posts = this.state.posts.filter((post) => post._id !== deleteId);
+          // var newPosts = [];
+          // for(var i = 0; i < posts.length; i++) {
+          //   var post = posts[i];
+          //   if(post._id !== deleteId) {
+          //     newPosts.push(post);
+          //   }
+          // }
+
           this.setState({
             posts: posts
           })
@@ -150,6 +158,18 @@ class App extends React.Component {
           if (index >= 0) {
             posts.splice(index, 1, updatedPost);
           }
+
+          // var index = -1;
+          // for(var i = 0; i < posts.length; i++) {
+          //   var post = posts[i];
+          //   if(post._id == updatedPost._id) {
+          //     index = i;
+          //   }
+          // }
+          //
+          // if(index >= 0) {
+          //   posts[index] = updatedPost;
+          // }
 
           this.setState({
             posts: posts,
