@@ -1,6 +1,9 @@
 import React from 'react';
 import Header from './Header';
 import axios from 'axios';
+import { connect } from 'react-redux';
+
+import { getPosts, savePost } from "./actions/actions";
 
 import './styles/index.css';
 
@@ -10,7 +13,6 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      posts: [],
       showAddPostModal: false,
       addAuthor: '',
       addTitle: '',
@@ -24,14 +26,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // axios.get('http://localhost:3001/api/posts')
-    //   .then((response) => {
-    //     this.setState({
-    //       posts: response.data.posts,
-    //     });
-    //   }).catch((error) => {
-    //     console.log(error);
-    // })
+    this.props.getPosts();
   }
 
   showAddPostModalEvent() {
@@ -62,27 +57,37 @@ class App extends React.Component {
 
     // const { addAuthor, addTitle, addContent } = this.state;
 
-    axios.post('http://localhost:3001/api/posts', {
-      author: addAuthor,
-      title: addTitle,
-      content: addContent
-    }).then((success) => {
-
-      const savedPost = success.data.savedPost;
-      const posts = this.state.posts;
-      posts.push(savedPost);
-
-      this.setState({
-        posts: posts,
-        showAddPostModal: false,
-        addAuthor: '',
-        addTitle: '',
-        addContent: ''
+    this.props.savePost(addAuthor, addTitle, addContent,
+      () => {
+        this.setState({
+          showAddPostModal: false,
+          addAuthor: '',
+          addTitle: '',
+          addContent: ''
+        });
       });
 
-    }).catch((error) => {
-      console.log(error);
-    });
+    // axios.post('http://localhost:3001/api/posts', {
+    //   author: addAuthor,
+    //   title: addTitle,
+    //   content: addContent
+    // }).then((success) => {
+    //
+    //   const savedPost = success.data.savedPost;
+    //   const posts = this.state.posts;
+    //   posts.push(savedPost);
+    //
+    //   this.setState({
+    //     posts: posts,
+    //     showAddPostModal: false,
+    //     addAuthor: '',
+    //     addTitle: '',
+    //     addContent: ''
+    //   });
+    //
+    // }).catch((error) => {
+    //   console.log(error);
+    // });
 
   }
 
@@ -186,7 +191,7 @@ class App extends React.Component {
   };
 
   render() {
-    const posts = this.state.posts;
+    const posts = this.props.posts;
 
     const addAuthor = this.state.props;
     const addTitle = this.state.props;
@@ -300,4 +305,22 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+  return {
+    posts: state.posts.posts
+  };
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    getPosts: () => {
+      dispatch(getPosts())
+    },
+
+    savePost: (addAuthor, addTitle, addContent, changeState) => {
+      dispatch(savePost(addAuthor, addTitle, addContent, changeState))
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
