@@ -47,6 +47,12 @@ function posts(state = initialState, action) {
         ...state,
         posts: copyPosts
       };
+
+      // return {
+      //   ...state,
+      //   posts: state.posts.map((post) =>
+      //     post._id === action.data._id ? action.data : post)
+      // };
     case EDIT_POST_ERROR:
       return {
         ...state,

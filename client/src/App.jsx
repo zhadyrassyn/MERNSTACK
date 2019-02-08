@@ -7,6 +7,8 @@ import { getPosts, savePost, deletePost, editPost } from "./actions/actions";
 
 import './styles/index.css';
 
+import defaultPostImage from './images/default.jpg';
+
 class App extends React.Component {
 
   constructor(props) {
@@ -209,6 +211,14 @@ class App extends React.Component {
             posts.map((post) => {
               return (
                 <li key={post._id} className="list-group-item" >
+                  { post.image &&
+                    <img src={post.image} alt="Post image"/>
+                  }
+
+                  { !post.image &&
+                    <img src={defaultPostImage} alt="Post image"/>
+                  }
+
                   {post.title},
                   {post.author},
                   {post.content}

@@ -1,6 +1,14 @@
 var express = require('express');
 var router = express.Router();
 
+var multer = require('multer');
+var path = require('path');
+
+var uploadDir = path.join(__dirname, "../uploads");
+var upload = multer({ dest: uploadDir });
+
+var base64Img = require('base64-img');
+
 var Post = require('./../db/model/post.js');
 router.get('/api/posts', function(request, response) {
   Post.find().then(function(posts) {
@@ -20,7 +28,7 @@ router.get('/api/posts', function(request, response) {
 // }
 
 // СОЗДАНИЕ НОВОГО ПОСТА
-router.post('/api/posts', function(request, response) {
+router.post('/api/posts', upload.single('file'), function(request, response) {
   var title = request.body.title;
   var author = request.body.author;
   var content = request.body.content;
@@ -28,18 +36,35 @@ router.post('/api/posts', function(request, response) {
   var newPostData = {
     title: title,
     author: author,
-    content: content
+    content: content,
   };
 
-  var newPost = new Post(newPostData);
-  newPost.save().then(function(savedPost) {
-    response.send({
-      savedPost: savedPost
+  var filePath = '';
+  try {
+    filePath = request.file.path;
+  } catch(e) {
+    console.log('File not found');
+  }
+
+  // var filePath = request.file && request.file.path || "";
+
+  base64Img.base64(filePath, function(err, data) {
+    if (err)
+      console.log(err);
+    else
+      newPostData.image = data;
+
+    var newPost = new Post(newPostData);
+    newPost.save().then(function(savedPost) {
+      response.send({
+        savedPost: savedPost
+      })
+    }).catch(function(error) {
+      console.log(error);
+      res.status(403).send(error);
     })
-  }).catch(function(error) {
-    console.log(error);
-    res.status(403).send(error);
-  })
+  });
+
 });
 
 //localhsot:3000/api/posts/1234
