@@ -3,7 +3,7 @@ import Header from './Header';
 import axios from 'axios';
 import { connect } from 'react-redux';
 
-import { getPosts, savePost } from "./actions/actions";
+import { getPosts, savePost, deletePost, editPost } from "./actions/actions";
 
 import './styles/index.css';
 
@@ -92,25 +92,7 @@ class App extends React.Component {
   }
 
   handleDelete(deleteId) {
-    axios.delete('http://localhost:3001/api/posts/' + deleteId)
-      .then((success) => {
-        if (success.status === 200) {
-          const posts = this.state.posts.filter((post) => post._id !== deleteId);
-          // var newPosts = [];
-          // for(var i = 0; i < posts.length; i++) {
-          //   var post = posts[i];
-          //   if(post._id !== deleteId) {
-          //     newPosts.push(post);
-          //   }
-          // }
-
-          this.setState({
-            posts: posts
-          })
-        }
-      }).catch((error) => {
-      console.log(error);
-    });
+    this.props.deletePost(deleteId);
   };
 
   handleEdit = (post) => {
@@ -153,41 +135,14 @@ class App extends React.Component {
       content: editContent,
     };
 
-    axios.put('http://localhost:3001/api/posts/' + editPostId, updatePost)
-      .then((success) => {
-        if (success.status === 200) {
-          const updatedPost = success.data.updatedPost;
-          let posts = this.state.posts;
-          const index = posts.findIndex(post => post._id === updatedPost._id);
-
-          if (index >= 0) {
-            posts.splice(index, 1, updatedPost);
-          }
-
-          // var index = -1;
-          // for(var i = 0; i < posts.length; i++) {
-          //   var post = posts[i];
-          //   if(post._id == updatedPost._id) {
-          //     index = i;
-          //   }
-          // }
-          //
-          // if(index >= 0) {
-          //   posts[index] = updatedPost;
-          // }
-
-          this.setState({
-            posts: posts,
-            showEditModal: false,
-            editAuthor: '',
-            editTitle: '',
-            editContent: '',
-          });
-        }
-      })
-      .catch((error) => {
-        console.log(error);
+    this.props.editPost(editPostId, updatePost, () => {
+      this.setState({
+        showEditModal: false,
+        editAuthor: '',
+        editTitle: '',
+        editContent: '',
       });
+    });
   };
 
   render() {
@@ -319,6 +274,14 @@ const mapDispatchToProps = (dispatch) => {
 
     savePost: (addAuthor, addTitle, addContent, changeState) => {
       dispatch(savePost(addAuthor, addTitle, addContent, changeState))
+    },
+
+    editPost: (id, newPost, changeState) => {
+      dispatch(editPost(id, newPost, changeState));
+    },
+
+    deletePost: (id) => {
+      dispatch(deletePost(id));
     }
   };
 };

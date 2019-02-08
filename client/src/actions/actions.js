@@ -3,6 +3,10 @@ import {
   GET_POSTS_ERROR,
   SAVE_POSTS_SUCCESS,
   SAVE_POSTS_ERROR,
+  EDIT_POST_SUCCESS,
+  EDIT_POST_ERROR,
+  DELETE_POST_SUCCESS,
+  DELETE_POST_ERROR,
 } from "./../types/types";
 import axios from 'axios';
 
@@ -46,15 +50,39 @@ export const savePost = (addAuthor, addTitle, addContent, changeState) => (dispa
     });
 };
 
-// export function getPosts() {
-//   return function(dispatch) {
-//
-//   }
-// }
+export const editPost = (id, newPost, changeState) => (dispatch) => {
+  axios.put('http://localhost:3001/api/posts/' + id, newPost)
+    .then((success) => {
+      const updatedPost = success.data.updatedPost;
+      dispatch({
+        type: EDIT_POST_SUCCESS,
+        data: updatedPost,
+      });
 
-export function addPost(newPost) {
-  return {
-    type: 'ADD_POST',
-    data: newPost
-  }
-}
+      changeState();
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch({
+        type: EDIT_POST_ERROR,
+        error: error.message || "ERROR HAPPENED"
+      });
+    });
+};
+
+export const deletePost = (id) => (dispatch) => {
+  axios.delete('http://localhost:3001/api/posts/' + id)
+    .then((success) => {
+      dispatch({
+        type: DELETE_POST_SUCCESS,
+        data: id,
+      });
+
+    }).catch((error) => {
+    console.log(error);
+    dispatch({
+      type: DELETE_POST_ERROR,
+      error: error.message || "ERROR HAPPENED"
+    });
+  });
+};
