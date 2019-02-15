@@ -19,11 +19,14 @@ class App extends React.Component {
       addAuthor: '',
       addTitle: '',
       addContent: '',
+      saveFile: null,
       showEditModal: false,
       editAuthor: '',
       editTitle: '',
       editContent: '',
       editPostId: 0,
+      editImage: null,
+      editSaveFile: null,
     };
   }
 
@@ -56,16 +59,18 @@ class App extends React.Component {
     const addAuthor = this.state.addAuthor;
     const addTitle = this.state.addTitle;
     const addContent = this.state.addContent;
+    const image = this.state.saveFile;
 
     // const { addAuthor, addTitle, addContent } = this.state;
 
-    this.props.savePost(addAuthor, addTitle, addContent,
+    this.props.savePost(addAuthor, addTitle, addContent, image,
       () => {
         this.setState({
           showAddPostModal: false,
           addAuthor: '',
           addTitle: '',
-          addContent: ''
+          addContent: '',
+          saveFile: null
         });
       });
 
@@ -97,17 +102,25 @@ class App extends React.Component {
     this.props.deletePost(deleteId);
   };
 
+  handleFileChange(event) {
+    this.setState({
+      saveFile: event.target.files[0],
+    });
+  }
+
   handleEdit = (post) => {
     const author = post.author;
     const title = post.title;
     const content = post.content;
     const id = post._id;
+    const image = post.image;
     this.setState({
       showEditModal: true,
       editAuthor: author,
       editTitle: title,
       editContent: content,
-      editPostId: id
+      editPostId: id,
+      editImage: image,
     });
   };
 
@@ -130,11 +143,13 @@ class App extends React.Component {
     const editTitle = this.state.editTitle;
     const editContent = this.state.editContent;
     const editPostId = this.state.editPostId;
+    const editSaveFile = this.state.editSaveFile;
 
     const updatePost = {
       author: editAuthor,
       title: editTitle,
       content: editContent,
+      file: editSaveFile,
     };
 
     this.props.editPost(editPostId, updatePost, () => {
@@ -146,6 +161,12 @@ class App extends React.Component {
       });
     });
   };
+
+  handleEditFileImage(event) {
+    this.setState({
+      editSaveFile: event.target.files[0]
+    })
+  }
 
   render() {
     const posts = this.props.posts;
@@ -159,6 +180,9 @@ class App extends React.Component {
     const editAuthor = this.state.editAuthor;
     const editTitle = this.state.editTitle;
     const editContent = this.state.editContent;
+
+    const editImage = this.state.editImage;
+    const editSaveFile = this.state.editSaveFile;
 
     return (
       <div className="px-2 py-2">
@@ -186,6 +210,9 @@ class App extends React.Component {
                 </textarea>
               </div>
 
+              <div className="input-group mt-3">
+                <input type="file" onChange={this.handleFileChange.bind(this)}/>
+              </div>
             </div>
             <div className="mymodal-footer">
               <div className="my-2 text-right">
@@ -243,15 +270,28 @@ class App extends React.Component {
               <span className="myclose" onClick={this.handleEditShowModal.bind(this)}>&times;</span>
             </div>
             <div className="mymodal-body">
-              <div className="input-group my-3">
+              <div className="input-group mt-3">
+                <label htmlFor="editFile">
+                  { editImage &&
+                  <img src={editImage} alt="Post image" className="editPostImage"/>
+                  }
+
+                  { !editImage &&
+                  <img src={defaultPostImage} alt="Post image" className="editPostImage"/>
+                  }
+                </label>
+                {editSaveFile && <span className="text-success">File chosen!</span>}
+                <input type="file" id="editFile" className="d-none" onChange={this.handleEditFileImage.bind(this)}/>
+              </div>
+              <div className="input-group mt-3">
                 <input type="text" className="form-control" name="editAuthor" placeholder="Author"
                        onChange={this.handleInputChange.bind(this)} value={editAuthor}/>
               </div>
-              <div className="input-group">
+              <div className="input-group mt-3">
                 <input type="text" className="form-control" name="editTitle" placeholder="Title"
                        onChange={this.handleInputChange.bind(this)} value={editTitle}/>
               </div>
-              <div className="input-group my-3">
+              <div className="input-group mt-3">
                 <textarea type="text" className="form-control" name="editContent" placeholder="Content..."
                           onChange={this.handleInputChange.bind(this)} value={editContent}/>
               </div>
@@ -282,8 +322,8 @@ const mapDispatchToProps = (dispatch) => {
       dispatch(getPosts())
     },
 
-    savePost: (addAuthor, addTitle, addContent, changeState) => {
-      dispatch(savePost(addAuthor, addTitle, addContent, changeState))
+    savePost: (addAuthor, addTitle, addContent, saveImage, changeState) => {
+      dispatch(savePost(addAuthor, addTitle, addContent, saveImage, changeState))
     },
 
     editPost: (id, newPost, changeState) => {

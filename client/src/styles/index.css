@@ -70,3 +70,17 @@
   /*background-color: #5cb85c;*/
   color: white;
 }
+
+.list-group-item img {
+  width: 150px;
+  height: auto;
+}
+
+.editPostImage {
+  width: 150px;
+  height: auto;
+}
+
+.editPostImage:hover {
+  cursor: pointer;
+}

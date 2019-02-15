@@ -27,12 +27,14 @@ export const getPosts = () => (dispatch) => {
   })
 };
 
-export const savePost = (addAuthor, addTitle, addContent, changeState) => (dispatch) => {
-  axios.post('http://localhost:3001/api/posts', {
-      author: addAuthor,
-      title: addTitle,
-      content: addContent
-    }).then((success) => {
+export const savePost = (addAuthor, addTitle, addContent, saveImage, changeState) => (dispatch) => {
+  const fd = new FormData();
+  fd.append('author', addAuthor);
+  fd.append('title', addTitle);
+  fd.append('content', addContent);
+  fd.append('file', saveImage);
+
+  axios.post('http://localhost:3001/api/posts', fd).then((success) => {
       const savedPost = success.data.savedPost;
 
       dispatch({
@@ -51,7 +53,13 @@ export const savePost = (addAuthor, addTitle, addContent, changeState) => (dispa
 };
 
 export const editPost = (id, newPost, changeState) => (dispatch) => {
-  axios.put('http://localhost:3001/api/posts/' + id, newPost)
+  const fd = new FormData();
+  fd.append('author', newPost.author);
+  fd.append('title', newPost.title);
+  fd.append('content', newPost.content);
+  fd.append('file', newPost.file);
+
+  axios.put('http://localhost:3001/api/posts/' + id, fd)
     .then((success) => {
       const updatedPost = success.data.updatedPost;
       dispatch({
