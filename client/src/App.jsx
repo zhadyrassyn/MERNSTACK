@@ -7,6 +7,8 @@ import { getPosts, savePost, deletePost, editPost } from "./actions/actions";
 
 import './styles/index.css';
 
+import { Link } from 'react-router-dom';
+
 import defaultPostImage from './images/default.jpg';
 
 class App extends React.Component {
@@ -256,6 +258,9 @@ class App extends React.Component {
                   <button className="btn btn-warning" onClick={this.handleEdit.bind(this, post)}>
                     <i className="fas fa-pencil-alt"/>
                   </button>
+                  <Link to={"/detail/" + post._id} className="btn btn-secondary ml-2">
+                    <i className="fas fa-eye"/>
+                  </Link>
                 </li>
               )
             })

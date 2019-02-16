@@ -7,6 +7,8 @@ import {
   EDIT_POST_ERROR,
   DELETE_POST_SUCCESS,
   DELETE_POST_ERROR,
+  FETCH_POST_SUCCESS,
+  FETCH_POST_ERROR
 } from "./../types/types";
 import axios from 'axios';
 
@@ -93,4 +95,21 @@ export const deletePost = (id) => (dispatch) => {
       error: error.message || "ERROR HAPPENED"
     });
   });
+};
+
+export const getPost = (id) => (dispatch) => {
+  axios.get('http://localhost:3001/api/posts/' + id)
+    .then((success) => {
+      console.log(success);
+      dispatch({
+        type: FETCH_POST_SUCCESS,
+        data: success.data.post
+      })
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch({
+        type: FETCH_POST_ERROR
+      })
+    });
 };

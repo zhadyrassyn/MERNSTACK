@@ -13,6 +13,7 @@ import {
 
 const initialState = {
   posts: [],
+  selectedPost: {},
 };
 
 function posts(state = initialState, action) {

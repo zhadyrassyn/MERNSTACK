@@ -124,4 +124,17 @@ router.put('/api/posts/:postId', upload.single('file'), function(request, respon
   });
 });
 
+router.get('/api/posts/:postId', (req, res) => {
+  const postId = req.params.postId;
+
+  Post.findById(postId).then((post) => {
+    res.send({
+      post: post
+    });
+  }).catch((err) => {
+    console.log(err);
+    res.status(500).send(err);
+  })
+});
+
 module.exports = router;

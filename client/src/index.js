@@ -9,6 +9,10 @@ import { createLogger } from 'redux-logger'
 import { createStore, applyMiddleware } from 'redux';
 import reducers from './reducers/reducers';
 
+import { BrowserRouter } from 'react-router-dom'
+
+import Main from './Main';
+
 const store = createStore(
   reducers,
   applyMiddleware(
@@ -18,7 +22,9 @@ const store = createStore(
 
 ReactDOM.render(
   <Provider store={store}>
-    <App/>
+    <BrowserRouter>
+      <Main/>
+    </BrowserRouter>
   </Provider>,
   document.getElementById('root')
 );
