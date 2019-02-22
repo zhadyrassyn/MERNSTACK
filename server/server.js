@@ -7,6 +7,7 @@ var authRoute = require('./route/authRoute');
 var app = express();
 app.use(bodyParser());
 app.use(cors());
+
 app.use('/', postRoute);
 app.use('/', authRoute);
 

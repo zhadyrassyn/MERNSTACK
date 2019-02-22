@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 
 const User = require('./../db/model/user');
 
+const passport = require('./../service/passport');
+
 const generateToken = (user) => {
   return jwt.sign({
     id: user._id,
@@ -24,7 +26,7 @@ router.post('/api/auth/sign-up', (req, res, next) => {
 
   user.save().then(savedUser => {
     res.status(201).send({
-      savedUser: savedUser
+      token: generateToken(savedUser)
     });
   }).catch(error => {
     console.log(error);
@@ -57,9 +59,11 @@ router.post('/api/auth/sign-in', (req, res, next) => {
   });
 });
 
-router.get('/api/secret', (req, res, next) => {
+router.get('/api/secret', passport.authenticate('jwt', { session: false }),
+  (req, res, next) => {
   res.send({
-    data: 'Data for authenticated users'
+    data: 'Secret data',
+    user: req.user
   });
 });
 
