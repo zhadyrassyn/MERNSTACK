@@ -1,5 +1,13 @@
 const router = require('express').Router();
+const jwt = require('jsonwebtoken');
+
 const User = require('./../db/model/user');
+
+const generateToken = (user) => {
+  return jwt.sign({
+    id: user._id,
+  }, 'counter-strike', { expiresIn: '2h' });
+};
 
 router.post('/api/auth/sign-up', (req, res, next) => {
   const firstName = req.body.firstName;
@@ -38,8 +46,8 @@ router.post('/api/auth/sign-in', (req, res, next) => {
           res.status(401).send('Email or password is wrong');
         } else {
           res.send({
-            user: user
-          })
+            token: generateToken(user)
+          });
         }
       });
     }
@@ -48,5 +56,13 @@ router.post('/api/auth/sign-in', (req, res, next) => {
     res.status(500).send('Internal Server Error');
   });
 });
+
+router.get('/api/secret', (req, res, next) => {
+  res.send({
+    data: 'Data for authenticated users'
+  });
+});
+
+//asdfkljasdljg;klqwrhowrhla;sdfjro;ghjaklsdjflkajdsf - key
 
 module.exports = router;
