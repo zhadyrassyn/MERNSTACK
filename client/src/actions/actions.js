@@ -8,7 +8,9 @@ import {
   DELETE_POST_SUCCESS,
   DELETE_POST_ERROR,
   FETCH_POST_SUCCESS,
-  FETCH_POST_ERROR
+  FETCH_POST_ERROR,
+  SIGN_IN_SUCCESS,
+  SIGN_IN_ERROR,
 } from "./../types/types";
 import axios from 'axios';
 
@@ -112,4 +114,18 @@ export const getPost = (id) => (dispatch) => {
         type: FETCH_POST_ERROR
       })
     });
+};
+
+export const signin = (email, password) => (dispatch) => {
+  axios.post('http://localhost:3001/api/auth/sign-in', {
+    email: email,
+    password: password
+  }).then((success) => {
+    console.log(success.data);
+  }).catch((error) => {
+    console.log(error);
+    dispatch({
+      type: SIGN_IN_ERROR
+    });
+  })
 };

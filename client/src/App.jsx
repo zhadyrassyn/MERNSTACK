@@ -189,8 +189,6 @@ class App extends React.Component {
     return (
       <div className="px-2 py-2">
 
-        <Header/>
-
         { showAddPostModal &&
         <div id="myModal" className="mymodal">
           <div className="mymodal-content">
