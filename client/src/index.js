@@ -13,12 +13,22 @@ import { BrowserRouter } from 'react-router-dom'
 
 import Main from './Main';
 
+import {
+  SIGN_IN_SUCCESS
+} from "./types/types";
+
 const store = createStore(
   reducers,
   applyMiddleware(
     thunkMiddleware,
     createLogger()
   ));
+
+if (localStorage.getItem('token')) {
+  store.dispatch({
+    type: SIGN_IN_SUCCESS
+  })
+}
 
 ReactDOM.render(
   <Provider store={store}>

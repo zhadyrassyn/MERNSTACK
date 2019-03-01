@@ -11,6 +11,7 @@ import {
   FETCH_POST_ERROR,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
+  SIGN_OUT_SUCCESS
 } from "./../types/types";
 import axios from 'axios';
 
@@ -116,16 +117,41 @@ export const getPost = (id) => (dispatch) => {
     });
 };
 
-export const signin = (email, password) => (dispatch) => {
+export const signin = (email, password, successCallback, errorCallback) => (dispatch) => {
   axios.post('http://localhost:3001/api/auth/sign-in', {
     email: email,
     password: password
   }).then((success) => {
-    console.log(success.data);
+    const token = success.data.token;
+    localStorage.setItem('token', token);
+    // localStorage.getItem('token');
+
+    dispatch({
+      type: SIGN_IN_SUCCESS,
+      data: token
+    });
+
+    successCallback();
+
   }).catch((error) => {
-    console.log(error);
+    // console.log(error.response);
     dispatch({
       type: SIGN_IN_ERROR
     });
+
+    if (error.response.status == 401) {
+      errorCallback(error.response.data);
+    } else {
+      errorCallback("Internal server error");
+    }
   })
+};
+
+export const signOut = (successCallback) => {
+  localStorage.removeItem('token');
+  successCallback();
+
+  return {
+    type: SIGN_OUT_SUCCESS
+  }
 };

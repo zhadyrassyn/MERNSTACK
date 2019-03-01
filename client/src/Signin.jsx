@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 
 import { signin } from "./actions/actions";
 
+import { withRouter } from 'react-router-dom';
+
 class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -11,6 +13,7 @@ class Signin extends React.Component {
     this.state = {
       email: '',
       password: '',
+      error: ''
     };
   }
 
@@ -26,13 +29,21 @@ class Signin extends React.Component {
     event.preventDefault();
     const { email, password } = this.state;
 
-    this.props.signin(email, password);
+    this.props.signin(email, password, () => {
+      this.props.history.push('/');
+    }, (error) => {
+      this.setState({
+        error: error
+      });
+    });
   }
 
 
   render() {
     const email = this.state.email;
     const password = this.state.password;
+
+    const error = this.state.error;
 
     return (
       <div className="signin-body">
@@ -50,7 +61,10 @@ class Signin extends React.Component {
               <input name="password" value={password} onChange={this.handleInputChange.bind(this)}
                      type="password" className="form-control" id="password" placeholder="Password"/>
             </div>
+
+            <p className="text-danger">{error}</p>
           </div>
+
 
           <button type="submit" className="btn btn-primary signin-btn" onClick={this.handleSubmit.bind(this)}>Submit</button>
         </form>
@@ -67,10 +81,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signin: (email, password) => {
-      dispatch(signin(email, password));
+    signin: (email, password, successCallback, errorCallback) => {
+      dispatch(signin(email, password, successCallback, errorCallback));
     }
   }
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Signin);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Signin));
