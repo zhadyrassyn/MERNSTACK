@@ -1,7 +1,10 @@
 var mongoose = require('./../db.js');
 
 var Post = mongoose.model('post', {
-  author: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  },
   title: String,
   content: {
     type: String,

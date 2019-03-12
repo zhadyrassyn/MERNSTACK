@@ -11,6 +11,8 @@ import { Link } from 'react-router-dom';
 
 import defaultPostImage from './images/default.jpg';
 
+const todos = [];
+
 class App extends React.Component {
 
   constructor(props) {
