@@ -1,11 +1,14 @@
 import {
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
-  SIGN_OUT_SUCCESS
+  SIGN_OUT_SUCCESS,
+  FETCH_USER_SUCCESS,
+  FETCH_USER_ERROR
 } from "../types/types";
 
 const initialState = {
   authenticated: false,
+  user: {}
 };
 
 function users(state = initialState, action) {
@@ -24,6 +27,15 @@ function users(state = initialState, action) {
       return {
         ...state,
         authenticated: false
+      };
+    case FETCH_USER_SUCCESS:
+      return {
+        ...state,
+        user: action.data
+      };
+    case FETCH_USER_ERROR:
+      return {
+        ...state,
       };
     default:
       return state;

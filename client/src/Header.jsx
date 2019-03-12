@@ -7,6 +7,8 @@ import { signOut } from "./actions/actions";
 
 import { withRouter } from 'react-router-dom';
 
+import { getTokenData } from "./utils/utils";
+
 class Header extends React.Component {
 
   handleSignOut(event) {
@@ -18,6 +20,7 @@ class Header extends React.Component {
   }
 
   render() {
+    const tokenData = getTokenData(localStorage.getItem('token'));
 
     const authenticated = this.props.authenticated;
 
@@ -38,6 +41,15 @@ class Header extends React.Component {
 
               { !authenticated &&
               <a className="nav-item nav-link" href="#">Sign up</a>
+              }
+
+              { authenticated &&
+              <NavLink
+                className="nav-item nav-link"
+                exact activeClassName="active"
+                to={"/profile/" + tokenData.id}>
+                {tokenData.firstName}
+              </NavLink>
               }
 
               { authenticated &&

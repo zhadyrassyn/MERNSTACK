@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const Post = require('./../db/model/post');
+const User = require('./../db/model/user');
 const passport = require('./../service/passport');
 
 const multer = require('multer');
@@ -120,6 +121,18 @@ router.put('/api/profiles/posts/:postId', requireSignIn, upload.single('file'), 
     });
 
   });
+});
+
+router.get('/api/profile', requireSignIn, async (req, res, next) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+    res.send(user);
+  } catch (e) {
+    console.log(e);
+    res.status(500).send(e);
+  }
 });
 
 module.exports = router;

@@ -6,6 +6,8 @@ import { signin } from "./actions/actions";
 
 import { withRouter } from 'react-router-dom';
 
+import { getIdFromToken } from "./utils/utils";
+
 class Signin extends React.Component {
   constructor(props) {
     super(props);
@@ -30,7 +32,9 @@ class Signin extends React.Component {
     const { email, password } = this.state;
 
     this.props.signin(email, password, () => {
-      this.props.history.push('/');
+      const userId = getIdFromToken(localStorage.getItem('token'));
+      // this.props.history.push('/profile/' + userId);
+      this.props.history.push(`/profile/${userId}`);
     }, (error) => {
       this.setState({
         error: error

@@ -11,7 +11,9 @@ import {
   FETCH_POST_ERROR,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
-  SIGN_OUT_SUCCESS
+  SIGN_OUT_SUCCESS,
+  FETCH_USER_SUCCESS,
+  FETCH_USER_ERROR
 } from "./../types/types";
 import axios from 'axios';
 
@@ -154,4 +156,23 @@ export const signOut = (successCallback) => {
   return {
     type: SIGN_OUT_SUCCESS
   }
+};
+
+export const fetchUser = () => (dispatch) => {
+  axios.get('http://localhost:3001/api/profile', {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  }).then(response => {
+    const user = response.data;
+    dispatch({
+      type: FETCH_USER_SUCCESS,
+      data: user
+    })
+  }).catch(error => {
+    console.log(error);
+    dispatch({
+      type: FETCH_USER_ERROR
+    })
+  });
 };

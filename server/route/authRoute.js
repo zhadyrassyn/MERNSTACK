@@ -8,6 +8,7 @@ const passport = require('./../service/passport');
 const generateToken = (user) => {
   return jwt.sign({
     id: user._id,
+    firstName: user.firstName
   }, 'counter-strike', { expiresIn: '2h' });
 };
 
