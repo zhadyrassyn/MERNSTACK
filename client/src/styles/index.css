@@ -108,3 +108,11 @@
   width: 100%;
   border-radius: 0;
 }
+
+.user-ava-img {
+  width: 200px;
+}
+
+.user-ava-img:hover {
+  cursor: pointer;
+}

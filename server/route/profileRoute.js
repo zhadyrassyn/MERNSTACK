@@ -11,6 +11,8 @@ const base64Img = require('base64-img');
 
 const requireSignIn = passport.authenticate('jwt', { session: false });
 
+const fs = require('fs');
+
 router.get('/api/profiles/posts', requireSignIn, async (req, res, next) => {
   const user = req.user;
 
@@ -133,6 +135,39 @@ router.get('/api/profile', requireSignIn, async (req, res, next) => {
     console.log(e);
     res.status(500).send(e);
   }
+});
+
+router.post('/api/profile/ava', requireSignIn, upload.single('file'), (req, res, next) => {
+  const id = req.user._id;
+  const filePath = req.file.path;
+  // req,file.originalname = cat.png
+  // req.file.originalname.split('.') = ['cat', 'png']
+  const fileExtension = req.file.originalname.split('.').pop();
+  const targetFile = id + '.' + fileExtension; // 47fdgshuui0.png
+  const targetPath = path.join(uploadDir, "avas", targetFile);
+
+  fs.rename(filePath, targetPath, function(err) {
+    if (err) next(err);
+
+    User.findById(id).then(user => {
+      const previousAva = user.avaPath;
+
+      user.avaPath = "/avas/" + targetFile;
+
+      user.save().then(updatedUser => {
+
+        if(previousAva && !previousAva.endsWith(fileExtension)) {
+          fs.unlink(previousAva, function(err) {
+            if (err) {
+              console.log(err);
+            }
+          });
+        }
+
+        res.send(updatedUser);
+      }).catch(err => next(err));
+    }).catch(err => next(err));
+  });
 });
 
 module.exports = router;

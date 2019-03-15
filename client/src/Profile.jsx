@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import {fetchUser} from "./actions/actions";
-
+import defaultAva from './images/defaultAva.png';
 
 class Profile extends Component {
 
@@ -11,11 +11,24 @@ class Profile extends Component {
 
   render() {
     const user = this.props.user;
-    console.log('user ', user);
 
     return (
       <div>
-        Profile page
+        <h3>Hello, {user.firstName}, {user.lastName}</h3>
+
+        <label htmlFor="fileInput">
+          { !user.avaPath &&
+          <img src={defaultAva} className="user-ava-img"/>
+          }
+
+          { user.avaPath &&
+          <img src={"http://localhost:3001" + user.avaPath}
+               className="user-ava-img"/>
+          }
+        </label>
+
+        <input type="file" className="d-none" id="fileInput"/>
+
       </div>
     )
   }
