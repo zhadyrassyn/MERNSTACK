@@ -47,6 +47,7 @@ userSchema.methods.comparePasswords = function(plainPassword, next) {
   var user = this;
 
   bcrypt.compare(plainPassword, user.password, function(error, result) {
+    console.log('result ', result);
     if (error) {
       next(error);
     } else {

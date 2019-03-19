@@ -1,19 +1,21 @@
 import {
   GET_POSTS_SUCCESS,
   GET_POSTS_ERROR,
-  SAVE_POSTS_SUCCESS,
-  SAVE_POSTS_ERROR,
-  EDIT_POST_SUCCESS,
-  EDIT_POST_ERROR,
-  DELETE_POST_SUCCESS,
-  DELETE_POST_ERROR,
+  SAVE_USER_POST_SUCCESS,
+  SAVE_USER_POST_ERROR,
+  EDIT_USER_POST_SUCCESS,
+  EDIT_USER_POST_ERROR,
+  DELETE_USER_POST_SUCCESS,
+  DELETE_USER_POST_ERROR,
   FETCH_POST_SUCCESS,
   FETCH_POST_ERROR,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS,
   FETCH_USER_SUCCESS,
-  FETCH_USER_ERROR
+  FETCH_USER_ERROR,
+  FETCH_USER_POSTS_SUCCESS,
+  FETCH_USER_POSTS_ERROR
 } from "./../types/types";
 import axios from 'axios';
 
@@ -32,74 +34,6 @@ export const getPosts = () => (dispatch) => {
         message: error.response.message || 'INTERNAL SERVER ERROR'
       });
   })
-};
-
-export const savePost = (addAuthor, addTitle, addContent, saveImage, changeState) => (dispatch) => {
-  const fd = new FormData();
-  fd.append('author', addAuthor);
-  fd.append('title', addTitle);
-  fd.append('content', addContent);
-  fd.append('file', saveImage);
-
-  axios.post('http://localhost:3001/api/posts', fd).then((success) => {
-      const savedPost = success.data.savedPost;
-
-      dispatch({
-        type: SAVE_POSTS_SUCCESS,
-        data: savedPost
-      });
-
-      changeState()
-    }).catch((error) => {
-      console.log(error);
-      dispatch({
-        type: SAVE_POSTS_ERROR,
-        message: error.response.message || 'INTERNAL SERVER ERROR'
-      })
-    });
-};
-
-export const editPost = (id, newPost, changeState) => (dispatch) => {
-  const fd = new FormData();
-  fd.append('author', newPost.author);
-  fd.append('title', newPost.title);
-  fd.append('content', newPost.content);
-  fd.append('file', newPost.file);
-
-  axios.put('http://localhost:3001/api/posts/' + id, fd)
-    .then((success) => {
-      const updatedPost = success.data.updatedPost;
-      dispatch({
-        type: EDIT_POST_SUCCESS,
-        data: updatedPost,
-      });
-
-      changeState();
-    })
-    .catch((error) => {
-      console.log(error);
-      dispatch({
-        type: EDIT_POST_ERROR,
-        error: error.message || "ERROR HAPPENED"
-      });
-    });
-};
-
-export const deletePost = (id) => (dispatch) => {
-  axios.delete('http://localhost:3001/api/posts/' + id)
-    .then((success) => {
-      dispatch({
-        type: DELETE_POST_SUCCESS,
-        data: id,
-      });
-
-    }).catch((error) => {
-    console.log(error);
-    dispatch({
-      type: DELETE_POST_ERROR,
-      error: error.message || "ERROR HAPPENED"
-    });
-  });
 };
 
 export const getPost = (id) => (dispatch) => {
@@ -174,5 +108,104 @@ export const fetchUser = () => (dispatch) => {
     dispatch({
       type: FETCH_USER_ERROR
     })
+  });
+};
+
+export const fetchUserPosts = () => (dispatch) => {
+  axios.get('http://localhost:3001/api/profiles/posts', {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  }).then(response => {
+    const posts = response.data.posts;
+    dispatch({
+      type: FETCH_USER_POSTS_SUCCESS,
+      data: posts
+    });
+  }).catch(error=> {
+    console.log(error);
+    dispatch({
+      type: FETCH_USER_POSTS_ERROR
+    });
+  });
+};
+
+export const saveUserPost = (addAuthor, addTitle, addContent, saveImage, changeState) => (dispatch) => {
+  const fd = new FormData();
+  fd.append('author', addAuthor);
+  fd.append('title', addTitle);
+  fd.append('content', addContent);
+  fd.append('file', saveImage);
+
+  axios.post('http://localhost:3001/api/profiles/posts', fd, {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  }).then((success) => {
+    const savedPost = success.data.savedPost;
+
+    dispatch({
+      type: SAVE_USER_POST_SUCCESS,
+      data: savedPost
+    });
+
+    changeState()
+  }).catch((error) => {
+    console.log(error);
+    dispatch({
+      type: SAVE_USER_POST_ERROR,
+      message: error.response.message || 'INTERNAL SERVER ERROR'
+    })
+  });
+};
+
+export const editUserPost = (id, newPost, changeState) => (dispatch) => {
+  const fd = new FormData();
+  fd.append('author', newPost.author);
+  fd.append('title', newPost.title);
+  fd.append('content', newPost.content);
+  fd.append('file', newPost.file);
+
+  axios.put('http://localhost:3001/api/profiles/posts/' + id, fd, {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  })
+    .then((success) => {
+      const updatedPost = success.data.updatedPost;
+      dispatch({
+        type: EDIT_USER_POST_SUCCESS,
+        data: updatedPost,
+      });
+
+      changeState();
+    })
+    .catch((error) => {
+      console.log(error);
+      dispatch({
+        type: EDIT_USER_POST_ERROR,
+        error: error.message || "ERROR HAPPENED"
+      });
+    });
+};
+
+export const deleteUserPost = (id) => (dispatch) => {
+  axios.delete('http://localhost:3001/api/profiles/posts/' + id, {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  })
+    .then((success) => {
+      dispatch({
+        type: DELETE_USER_POST_SUCCESS,
+        data: id,
+      });
+
+    }).catch((error) => {
+    console.log(error);
+    dispatch({
+      type: DELETE_USER_POST_ERROR,
+      error: error.message || "ERROR HAPPENED"
+    });
   });
 };
