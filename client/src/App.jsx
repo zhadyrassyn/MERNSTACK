@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { getPosts } from "./actions/actions";
+import { getPosts, addToFavourites } from "./actions/actions";
 
 import './styles/index.css';
 
 import { Link } from 'react-router-dom';
 
 import defaultPostImage from './images/default.jpg';
+
+import { withRouter } from 'react-router-dom';
 
 class App extends React.Component {
 
@@ -19,11 +21,33 @@ class App extends React.Component {
     this.props.getPosts();
   }
 
+  addToFavourites(movieId) {
+    const movieToAdd = this.props.movies.find(movie => movie.id === movieId);
+    this.props.addToFavourites(movieToAdd);
+    this.props.history.push('/favourites');
+  }
+
   render() {
     const posts = this.props.posts;
 
+    const movies = this.props.movies;
+
     return (
       <div className="px-2 py-2">
+
+        <ul className="list-group">
+          {
+            movies.map(movie => {
+            return (
+              <li key={movie.id} className="list-group-item" >
+                {movie.id}
+                {movie.name}
+                <button onClick={this.addToFavourites.bind(this, movie.id)}>Add</button>
+              </li>
+            )
+          })
+          }
+        </ul>
 
         <ul className="list-group">
           {
@@ -57,7 +81,8 @@ class App extends React.Component {
 
 const mapStateToProps = (state) => {
   return {
-    posts: state.posts.posts
+    posts: state.posts.posts,
+    movies: state.movies.movies
   };
 };
 
@@ -66,7 +91,10 @@ const mapDispatchToProps = (dispatch) => {
     getPosts: () => {
       dispatch(getPosts())
     },
+    addToFavourites: (movie) => {
+      dispatch(addToFavourites(movie));
+    }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

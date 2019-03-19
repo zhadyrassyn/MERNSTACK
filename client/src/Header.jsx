@@ -34,7 +34,7 @@ class Header extends React.Component {
           <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div className="navbar-nav">
               <NavLink className="nav-item nav-link" exact activeClassName="active" to="/">Home <span class="sr-only">(current)</span></NavLink>
-
+              <NavLink className="nav-item nav-link" exact activeClassName="active" to="/favourites">Favourites</NavLink>
               { !authenticated &&
               <NavLink className="nav-item nav-link" exact activeClassName="active" to="/signin">Sign in</NavLink>
               }
