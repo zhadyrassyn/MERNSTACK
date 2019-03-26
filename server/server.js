@@ -5,6 +5,7 @@ var cors = require('cors');
 var postRoute = require('./route/postRoute.js');
 var authRoute = require('./route/authRoute');
 var profileRoute = require('./route/profileRoute');
+var commentRoute = require('./route/commentRoute');
 var path = require('path');
 var app = express();
 
@@ -17,6 +18,7 @@ app.use(express.static(uploadDir));
 app.use('/', postRoute);
 app.use('/', authRoute);
 app.use('/', profileRoute);
+app.use('/', commentRoute);
 
 app.use(function(err, req, res, next) {
   console.log(err);

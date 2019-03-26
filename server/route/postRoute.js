@@ -37,7 +37,14 @@ router.get('/api/posts', function(request, response) {
 router.get('/api/posts/:postId', (req, res) => {
   const postId = req.params.postId;
 
-  Post.findById(postId).then((post) => {
+  Post.findById(postId).populate({
+    path: 'comments',
+    select: 'createdAt user text',
+    populate: {
+      path: 'user',
+      select: 'firstName lastName avaPath'
+    }
+  }).then((post) => {
     res.send({
       post: post
     });
