@@ -15,7 +15,9 @@ import {
   FETCH_USER_SUCCESS,
   FETCH_USER_ERROR,
   FETCH_USER_POSTS_SUCCESS,
-  FETCH_USER_POSTS_ERROR
+  FETCH_USER_POSTS_ERROR,
+  UPDATE_USER_AVATAR_SUCCESS,
+  UPDATE_USER_AVATAR_ERROR,
 } from "./../types/types";
 import axios from 'axios';
 
@@ -208,4 +210,25 @@ export const deleteUserPost = (id) => (dispatch) => {
       error: error.message || "ERROR HAPPENED"
     });
   });
+};
+
+export const updateUserAva = (file) => (dispatch) => {
+  const fd = new FormData();
+  fd.append("file", file);
+
+  axios.post('http://localhost:3001/api/profile/ava', fd, {
+    headers: {
+      "Authorization" : "Bearer " + localStorage.getItem('token')
+    }
+  }).then(success => {
+    dispatch({
+      type: UPDATE_USER_AVATAR_SUCCESS,
+      data: success.data
+    });
+  }).catch(error => {
+    console.log(error);
+    dispatch({
+      type: UPDATE_USER_AVATAR_ERROR
+    })
+  })
 };

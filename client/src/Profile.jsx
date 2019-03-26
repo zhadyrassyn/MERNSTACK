@@ -1,6 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {fetchUser, fetchUserPosts, saveUserPost, editUserPost, deleteUserPost} from "./actions/actions";
+import {
+  fetchUser,
+  fetchUserPosts,
+  saveUserPost,
+  editUserPost,
+  deleteUserPost,
+  updateUserAva
+} from "./actions/actions";
 import defaultAva from './images/defaultAva.png';
 import defaultPostImage from './images/default.jpg';
 import { Link } from 'react-router-dom';
@@ -22,7 +29,7 @@ class Profile extends Component {
       editContent: '',
       editPostId: 0,
       editImage: null,
-      editSaveFile: null,
+      editSaveFile: null
     };
   }
 
@@ -140,6 +147,11 @@ class Profile extends Component {
     })
   }
 
+  handleAvatarChange(event) {
+    const file = event.target.files[0];
+    this.props.updateUserAva(file);
+  }
+
   render() {
     const user = this.props.user;
     const posts = this.props.posts;
@@ -166,13 +178,15 @@ class Profile extends Component {
           <img src={defaultAva} className="user-ava-img"/>
           }
 
-          { user.avaPath &&
-          <img src={"http://localhost:3001" + user.avaPath}
+          { user.avaPath && //123.jpg?cb=22:33:01
+          <img src={"http://localhost:3001" + user.avaPath + "?cb=" + (new Date().toTimeString())}
                className="user-ava-img"/>
           }
         </label>
 
-        <input type="file" className="d-none" id="fileInput"/>
+        <input type="file" className="d-none" id="fileInput"
+         onChange={this.handleAvatarChange.bind(this)}
+        />
 
         <div className="px-2 py-2">
 
@@ -327,6 +341,10 @@ const mapDispatchToProps = (dispatch) => {
 
     deletePost: (id) => {
       dispatch(deleteUserPost(id));
+    },
+
+    updateUserAva: (file) => {
+      dispatch(updateUserAva(file));
     }
   }
 };

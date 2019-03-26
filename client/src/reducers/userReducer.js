@@ -11,7 +11,9 @@ import {
   DELETE_USER_POST_SUCCESS,
   DELETE_USER_POST_ERROR,
   SAVE_USER_POST_SUCCESS,
-  SAVE_USER_POST_ERROR
+  SAVE_USER_POST_ERROR,
+  UPDATE_USER_AVATAR_SUCCESS,
+  UPDATE_USER_AVATAR_ERROR,
 } from "../types/types";
 
 const initialState = {
@@ -89,6 +91,15 @@ function users(state = initialState, action) {
       return {
         ...state,
         error: action.error
+      };
+    case UPDATE_USER_AVATAR_SUCCESS:
+      return {
+        ...state,
+        user: action.data
+      };
+    case UPDATE_USER_AVATAR_ERROR:
+      return {
+        ...state
       };
     default:
       return state;
