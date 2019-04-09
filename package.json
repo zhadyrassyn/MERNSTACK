@@ -1,0 +1,23 @@
+{
+  "name": "MERN",
+  "version": "1.0.0",
+  "description": "MERN stack course",
+  "main": "index.js",
+  "scripts": {
+    "watch": "concurrently \"cd server && npm run watch\" \"cd client && npm run start\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zhadyrassyn/MERNSTACK.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zhadyrassyn/MERNSTACK/issues"
+  },
+  "homepage": "https://github.com/zhadyrassyn/MERNSTACK#readme",
+  "dependencies": {
+    "concurrently": "^4.1.0"
+  }
+}
